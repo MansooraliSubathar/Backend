@@ -12,6 +12,6 @@ namespace PremiumCalculator.Repository
     {
         public List<Occupation> GetOccupationList();
         public Rating GetRatingFactorDetails(int ratingId);
-        public double CalculatePremium(UserData userData);
+        public decimal CalculatePremium(UserData userData);
     }
 }

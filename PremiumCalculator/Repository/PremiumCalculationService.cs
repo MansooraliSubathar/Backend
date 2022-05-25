@@ -49,7 +49,7 @@ namespace PremiumCalculator.Repository
             }
             return null;
         }
-        public double CalculatePremium(UserData userData) //calculate the premium as per the given formula
+        public decimal CalculatePremium(UserData userData) //calculate the premium as per the given formula
         {
             try
             {
@@ -57,7 +57,7 @@ namespace PremiumCalculator.Repository
                 if (RatingFactorDetails == null)
                     return 0;
 
-                double DeathPremium = (userData.DeathCoverAmount * RatingFactorDetails.FactorValue * userData.Age) / 1000 * 12;
+                decimal DeathPremium = (userData.DeathCoverAmount * RatingFactorDetails.FactorValue * userData.Age) / 1000 * 12;
                 return DeathPremium;
             }
             catch (System.Exception ex) { _logger.LogError(ex.Message, ex.StackTrace); }
@@ -80,7 +80,7 @@ namespace PremiumCalculator.Repository
                                             {
                                                 ID = (int)res["id"],
                                                 Name = res["name"].ToString(),
-                                                FactorValue = (double)res["factor"]
+                                                FactorValue = (decimal)res["factor"]
                                             }).FirstOrDefault();
                     return RatingDetails;
                 }

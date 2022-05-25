@@ -24,6 +24,7 @@ namespace PremiumCalculator.Controllers
         }
 
         [HttpGet("GetOccupationList")]
+        //[OutputCache(10)]
         public ActionResult GetOccupationList()
         {
             List<Occupation> OccupationList =  this._premiumCalculatorService.GetOccupationList();
@@ -40,7 +41,7 @@ namespace PremiumCalculator.Controllers
             if (userData == null)
                 return NotFound();
 
-            double mothlyPremium = this._premiumCalculatorService.CalculatePremium(userData);            
+            decimal mothlyPremium = this._premiumCalculatorService.CalculatePremium(userData);            
 
             return Ok(mothlyPremium);
         }
