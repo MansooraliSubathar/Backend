@@ -1,1 +1,16 @@
-#Premium calculator API
+# Monthly premium calculator API
+Description:
+-----------------
+Implementation of Premium calculator API
+This application/api is used to get all the available Occupation list and Calculate the monthly premium as per the business logic.
+Functionality:
+-----------------
+1. CalculatePremium
+  Desc : to calculate the premium as per the business requirement return the premium value.
+  url : /api/PremiumCalculation/CalculatePremium  
+  sample input: {"DeathCoverAmount":12285.5,"RatingID":2,"Age":35}
+  sample output: 6449.887500
+2. GetOccupationList
+  url: /api/PremiumCalculation/GetOccupationList
+  Desc : to retrieve all the OccupationList as per the master data and return the list.  
+  sample output: JSON data list
