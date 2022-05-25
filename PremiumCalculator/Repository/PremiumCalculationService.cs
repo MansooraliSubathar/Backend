@@ -13,7 +13,7 @@ namespace PremiumCalculator.Repository
     {
         public readonly ILogger<PremiumCalculationService> _logger;
         public readonly IConfiguration _config;
-        public readonly Utility _utility;
+        public readonly Utility _utility;        
         public PremiumCalculationService(IConfiguration configuration, Utility utility, ILogger<PremiumCalculationService> logger)
         {
             _logger = logger;
@@ -53,7 +53,7 @@ namespace PremiumCalculator.Repository
         {
             try
             {
-                var RatingFactorDetails = GetRatingFactorDetails(userData.RatingID);
+                var RatingFactorDetails = GetRatingFactorDetails(userData.OccupationId);
                 if (RatingFactorDetails == null)
                     return 0;
 
@@ -64,18 +64,23 @@ namespace PremiumCalculator.Repository
 
             return 0;
         }
-                
-        public Rating GetRatingFactorDetails(int ratingId)
+
+        public Rating GetRatingFactorDetails(int occupationId)
         {
             string relativePath = string.Empty;
             try
             {
                 relativePath = _config.GetValue<string>("DataFilePath:Rating");
                 JArray RatingJson = _utility.GetJSON(relativePath);
-                if (RatingJson != null)
+
+                string OccupationRelativePath = _config.GetValue<string>("DataFilePath:Occupation");
+                JArray OccupationJson = _utility.GetJSON(OccupationRelativePath);
+
+                if (RatingJson != null && OccupationJson!=null)
                 {
                     Rating RatingDetails = (from res in RatingJson
-                                            where (int)res["id"] == ratingId
+                                            join occu in OccupationJson on (int)res["id"] equals ((int)occu["rating_id"])
+                                            where (int)occu["id"] == occupationId
                                             select new Rating
                                             {
                                                 ID = (int)res["id"],
