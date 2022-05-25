@@ -23,10 +23,11 @@ namespace PremiumCalculator.Repository
         public List<Occupation> GetOccupationList() // Retrieve all the Occupation list from source 
         {
             string relativePath = string.Empty;
+            JArray OccupationJson = null;
             try
             {
                 relativePath = _config.GetValue<string>("DataFilePath:Occupation");
-                JArray OccupationJson = _utility.GetJSON(relativePath);
+                OccupationJson = _utility.GetJSON(relativePath);
                 if (OccupationJson != null)
                 {
                     List<Occupation> OccupationList = (from res in OccupationJson
@@ -45,15 +46,17 @@ namespace PremiumCalculator.Repository
             }
             finally
             {
+                OccupationJson = null;
                 relativePath = string.Empty;
             }
             return null;
         }
         public decimal CalculatePremium(UserData userData) //calculate the premium as per the given formula
         {
+            Rating RatingFactorDetails = null;
             try
             {
-                var RatingFactorDetails = GetRatingFactorDetails(userData.OccupationId);
+                RatingFactorDetails = GetRatingFactorDetails(userData.OccupationId);
                 if (RatingFactorDetails == null)
                     return 0;
 
@@ -61,6 +64,7 @@ namespace PremiumCalculator.Repository
                 return DeathPremium;
             }
             catch (System.Exception ex) { _logger.LogError(ex.Message, ex.StackTrace); }
+            finally { RatingFactorDetails = null; }
 
             return 0;
         }
@@ -68,13 +72,15 @@ namespace PremiumCalculator.Repository
         public Rating GetRatingFactorDetails(int occupationId)
         {
             string relativePath = string.Empty;
+            JArray RatingJson = null;
+            JArray OccupationJson = null;
             try
             {
                 relativePath = _config.GetValue<string>("DataFilePath:Rating");
-                JArray RatingJson = _utility.GetJSON(relativePath);
+                RatingJson = _utility.GetJSON(relativePath);
 
                 string OccupationRelativePath = _config.GetValue<string>("DataFilePath:Occupation");
-                JArray OccupationJson = _utility.GetJSON(OccupationRelativePath);
+                OccupationJson = _utility.GetJSON(OccupationRelativePath);
 
                 if (RatingJson != null && OccupationJson!=null)
                 {
@@ -96,6 +102,8 @@ namespace PremiumCalculator.Repository
             }
             finally
             {
+                RatingJson = null;
+                OccupationJson = null;
                 relativePath = string.Empty;
             }
             return null;
